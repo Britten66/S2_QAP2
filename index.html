@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My_Webpage</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="greetUser">
+        Here's My Page Where You Can See My Code In Action.
+      </h1>
+    </header>
+
+    <main>
+      <section>
+        <button onclick="convertSnake()">Click Here</button>
+        <input type="text" id="userInput" placeholder="Snake Switch" />
+        <p id="output"></p>
+      </section>
+
+      <header>
+        <h1>Paste Video URL and Select Desired Width.</h1>
+      </header>
+
+      <section>
+        <label for="VideoURL">Enter Video URL:</label>
+        <input
+          type="text"
+          id="VideoURL"
+          class="u-full-width"
+          placeholder="Enter URL"
+        />
+
+        <label for="VideoWidth">Enter Width Here</label>
+        <input id="VideoWidth" type="number" placeholder="Ex. 500 " />
+
+        <label style="display: block; margin-top: 0.5rem">
+          <input type="checkbox" id="controlCheckbox" />Show Controls</label
+        >
+
+        <button id="btn" onclick="generateVideo()">Generate Now</button>
+        <div id="videoContainer"></div>
+      </section>
+
+      <header>
+        <h1>Enter Date Here</h1>
+      </header>
+
+      <section>
+        <input type="text" id="dateinput" placeholder="2025-01-01" />
+        <button onclick="parseDateString()">Convert Date</button>
+        <p id="dateoutput"></p>
+      </section>
+    </main>
+
+    <footer>&copy Chris Britten 2025 SD 15</footer>
+    <script src="script.js"></script>
+  </body>
+</html>

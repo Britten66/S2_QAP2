@@ -1,0 +1,32 @@
+body {
+  font-family: "Courier New", Courier, monospace;
+  background-color: wheat;
+  color: 333;
+  text-align: center;
+}
+body a,
+p,
+h1 {
+  font-family: "Courier New", Courier, monospace;
+  background-color: wheat;
+  color: black;
+  text-align: center;
+}
+header {
+  color: white;
+  padding: 20px;
+  background-color: wheat;
+}
+
+video {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 12px black;
+  margin-top: 10px;
+}
+footer {
+  color: black;
+
+  padding: 20px;
+  background-color: wheat;
+}
