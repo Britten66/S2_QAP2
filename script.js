@@ -195,34 +195,104 @@ function convertSelection() {
   }
 }
 
-// /*******************************************************************************
-//  * Problem 5: parse a geographic coordinate
-//  *
+// ==============================================================================================
+// ================ Problem 5: convert coordinates to simplified format =========================
+//  *============================================================================================
+
 //  * Coordinates are defined as numeric, decimal values of Longitude and Latitude.
 //  * A example, let's suppose the Keyin College St.John's campus is located at:
 //  *
 //  * Longitude: -77.4369 (negative number means West)
 //  * Latitude: 42.9755 (positive number means North)
-//  *
-//  * A dataset includes thousands of geographic coordinates, stored as strings.
-//  * However, over the years, different authors have used slightly different formats.
-//  * All of the following are valid and need to be parsed:
-//  *
-//  * 1. "42.9755,-77.4369" NOTE: no space
-//  * 4. "[-77.4369, 42.9755]" NOTE: the space, as well as lat/lng values are reversed
-//  *
+//
 //  * Valid Longitude values are decimal numbers between -180 and 180.
 //  *
 //  * Valid Latitude values are decimal numbers between -90 and 90.
 //  *
 //  * Parse the value and reformat it into the form: "(lat, lng)"
-//  *
-//  ******************************************************************************/
 
-// function normalizeCoord(value) {
-//   // Replace this comment with your code...
-// }
+function normalizeCoord(value) {
+  if (typeof value !== "string" || !value.trim()) {
+    throw Error("CANNOT BE EMPTY");
+  }
 
+  const orig = value.trim();
+
+  // will use regx to select what I need to target
+
+  const nums = orig.match(/-?\d+(?:\.\d+)?/g);
+  if (!nums || nums.length !== 2) {
+    throw new Error(" TWO NUMBER VALUE REQUIRED ");
+  }
+
+  let a = parseFloat(nums[0]);
+  let b = parseFloat(nums[1]);
+
+  if (Number.isNaN(a) || Number.isNaN(b)) {
+    throw new Error("Invalid number");
+  }
+
+  const startWithBracket = orig.startsWith("[");
+  let lat, lng;
+
+  if (startWithBracket) {
+    lng = a;
+    lat = b;
+  } else {
+    lat = a;
+    lng = b;
+  }
+
+  //validation here
+  if (lat < -90 || lat > 90) throw new Error("Lat must be -90 to 90");
+  if (lng < -180 || lng > 180) throw new Error("Long must be -180 to 180");
+  return `(${lat.toString()},${lng.toString()})`;
+}
+
+const sampleTest = {
+  baseLat: 42.9755,
+  baseLng: -77.436,
+  i: 0,
+  next() {
+    const lat = this.baseLat + 0.01 * this.i;
+    const lng = this.baseLng + 0.01 * this.i;
+
+    this.i = (this.i + 1) % 50;
+
+    if (this.i % 2 === 0) {
+      return `${lat.toFixed(4)},${lng.toFixed(4)}`;
+    } else {
+      return `[${lng.toFixed(4)},${lat.toFixed(4)}]`;
+    }
+  },
+};
+
+// coord output casuing major errors. behind so found this on stack
+
+function normalizeCoordClick() {
+  const inputEl = document.querySelector("#coordinates");
+  const outputEl = document.querySelector("#coorOutput");
+
+  if (!inputEl || !outputEl) {
+    console.error("No INPUT / OUTPUT in DOM");
+    return;
+  }
+
+  // user leaving it empty this must fill sample incase clicked.
+  //error casused if left blank
+
+  if (!inputEl.value.trim()) {
+    inputEl.value = sampleTest.next();
+  }
+  try {
+    const standardized = normalizeCoord(inputEl.value);
+    outputEl.textContent = `Standardized: ${standardized}`;
+    outputEl.style.color = "green";
+  } catch (err) {
+    outputEl.textContent = `Err: ${err.message}`;
+    outputEl.style.color = "red";
+  }
+}
 // /*******************************************************************************
 //  * Problem 6: format any number of coordinates as a list in a string
 //  *
