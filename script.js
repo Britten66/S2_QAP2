@@ -98,12 +98,13 @@ function generateVideo() {
 //  * - setMonth()
 //  * - setDate()
 
-function parseDateString() {
+function parseDateString(value) {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(" Wrong Input CANNOT BE EMPTY ");
   }
 
   const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
   if (!match) {
     throw new Error(" Format much Be YYYY-MM-DD ");
   }
@@ -128,15 +129,16 @@ function parseDateClick() {
   const output = document.querySelector("#dateoutput");
 
   try {
-    const dateObj = new Date(input);
+    const dateObj = parseDateString(input.value);
 
     if (isNaN(dateObj.getTime())) {
       throw new Error(" Incorrect Date Format");
     }
 
+    //formatting here
     const formatted = dateObj.toLocaleDateString("en-US", {
       year: "numeric",
-      month: "Long",
+      month: "long",
       day: "numeric",
     });
     output.textContent = `Here Is Your Date Parsed: ${formatted}`;
