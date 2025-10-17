@@ -72,15 +72,53 @@
       </header>
 
       <section>
-      <label for="cooridnates">Enter Coordinates</label>
+      <label for="coordinates">Enter Coordinates</label>
       <input type="text" id="coordinates" placeholder=" (42.9755, -77.4369)">
       <button type="button" onclick="normalizeCoordClick()">Generate</button>
       <p id="coorOutput"></p>
       </section>
 
+      <header>
+        <h1>After Parsing We Will Format </h1>
+      </header>
+
+      <section>
+       
+
+        <label for="formatList">Enter Coordinates & Seperate with  , </label>
+        <textarea id="formatList" rows="5" placeholder="42.955,-77.4369
+         [-62.1234,42.9755]
+        (10,20), [20,10]"></textarea>
 
 
+        <button type="button" onclick="formatCoordsClick()">Format</button>
 
+        
+        <pre id="formatOutput"></pre>
+        </section>
+      <header>
+        <h1> Determining MIME Type </h1>
+      </header>
+
+      <section> 
+        <label for="mimeInput">Enter The Fle Name</label>
+        <input
+        type="text"
+        id="mimeInput"
+        placeholder="example.mp3"
+        />
+        <button type="button" onclick="mimeFromFileClick()">
+          get MIME Type
+        </button>
+        <p id="mimeOutput"></p>
+      </section>
+
+       <header>
+        <h1>  </h1>
+      </header>
+
+
+      <section
     </main>
 
     <footer>&copy Chris Britten 2025 SD 15</footer>

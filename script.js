@@ -197,7 +197,7 @@ function convertSelection() {
 
 // ==============================================================================================
 // ================ Problem 5: convert coordinates to simplified format =========================
-//  *============================================================================================
+// ============================================================================================
 
 //  * Coordinates are defined as numeric, decimal values of Longitude and Latitude.
 //  * A example, let's suppose the Keyin College St.John's campus is located at:
@@ -293,39 +293,64 @@ function normalizeCoordClick() {
     outputEl.style.color = "red";
   }
 }
-// /*******************************************************************************
-//  * Problem 6: format any number of coordinates as a list in a string
-//  *
+// ==============================================================================================
+// ================ Problem 6:  format any number of coordinates as a list in a string =========================
+// ============================================================================================
+
 //  * You are asked to format geographic lat, lng coordinates in a list using your
 //  * normalizeCoord() function from problem 5.
 //  *
-//  * Where normalizeCoord() takes a single geographic coord, the formatCoords()
-//  * function takes a list of any number of geographic coordinates, parses them,
-//  * filters out any invalid coords, and creates a list.
-//  *
-//  * For example: given the following coords, "42.9755,-77.4369" and "[-62.1234, 42.9755]",
-//  * a new list would be created of the following form "((42.9755, -77.4369), (42.9755, -62.1234))".
-//  *
-//  * Notice how the list has been enclosed in an extra set of (...) braces, and each
-//  * formatted geographic coordinate is separated by a comma and space.
-//  *
-//  * The formatCoords() function can take any number of arguments, but they must all
-//  * be strings.  If any of the values can't be parsed by normalizeCoord() (i.e., if
-//  * an Error is thrown), skip the value.  For example:
-//  *
+//
 //  * formatCoords("42.9755,-77.4369", "[-62.1234, 42.9755]", "300,-9000") should return
 //  * "((42.9755, -77.4369), (42.9755, -62.1234))" and skip the invalid coordinate.
 //  *
 
-//  ******************************************************************************/
+function formatCoords(...coordString) {
+  const formattedList = [];
 
-// function formatCoords(...values) {
-//   // Replace this comment with your code...
-// }
+  for (const coord of coordString) {
+    if (typeof coord !== "string") continue; // string only
+    try {
+      const normalized = normalizeCoord(coord);
+      formattedList.push(normalized);
+    } catch {
+      continue;
+    }
+  }
 
-// /*******************************************************************************
-//  * Problem 7: determine MIME type from filename extension
-//  *
+  //extremely hard to wrap my head around this next part
+
+  return formattedList.length > 0 ? `(${formattedList.join(", ")})` : "()";
+}
+
+function formatCoordsClick() {
+  const area = document.getElementById("formatList");
+  const out = document.getElementById("formatOutput");
+
+  if (!area || !out) {
+    console.error("Missing #formatList or #formatOutput");
+    return;
+  }
+
+  const parts = (area.value || "")
+    .split(/\r?\n|,(?=\s*[\[\(])/g)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  try {
+    const formatted = formatCoords(...parts);
+    out.textContent = `Formatted Coordinates: ${formatted}`;
+    out.style.color = "inherit";
+  } catch (err) {
+    out.textContent = `Error: ${err.message}`;
+    out.style.color = "red";
+  }
+}
+
+// ==============================================================================================
+// ================ Problem 7: determine MIME type from filename extension =========================
+// ============================================================================================
+
 //  * Web browsers and servers exchange streams of bytes, which must be interpreted
 //  * by the receiver based on their type.  For example, an HTML web page is
 //  * plain text, while a JPG image is a binary sequence.
@@ -371,14 +396,100 @@ function normalizeCoordClick() {
 //  * NOTE: any other extension should use the `application/octet-stream` MIME type,
 //  * to indicate that it is an unknown stream of bytes (e.g., binary file). You should
 //  * also use `application/octet-stream` if the file has no extension.
-//  *
+//  *//   // NOTE: Use a switch statement in your solution.
 
 //  ******************************************************************************/
+function mimeFromFilename(filename) {
+  //more validation
+  if (typeof filename !== "string" || !filename.trim()) {
+    throw new Error("Cannot Be Empty !! ");
+  }
 
-// function mimeFromFilename(filename) {
-//   // Replace this comment with your code...
-//   // NOTE: Use a switch statement in your solution.
-// }
+  //extracting here
+
+  const match = filename.trim().match(/\.([^>]+)$/);
+  if (!match) return "application/octet-stream";
+  const ext = match[1].toLowerCase();
+
+  // this was intense and had to take it from the web. what was given was not usable
+  switch (ext) {
+    case "html":
+    case "htm":
+      return "text/html";
+    case "css":
+      return "text/css";
+    case "js":
+      return "text/javascript";
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "gif":
+      return "image/gif";
+    case "bmp":
+      return "image/bmp";
+    case "ico":
+    case "cur":
+      return "image/x-icon";
+    case "png":
+      return "image/png";
+    case "svg":
+      return "image/svg+xml";
+    case "webp":
+      return "image/webp";
+    case "mp3":
+      return "audio/mp3";
+    case "wav":
+      return "audio/wav";
+    case "mp4":
+      return "video/mp4";
+    case "webm":
+      return "video/webm";
+    case "json":
+      return "application/json";
+    case "mpeg":
+      return "video/mpeg";
+    case "csv":
+      return "text/csv";
+    case "ttf":
+      return "font/ttf";
+    case "woff":
+      return "font/woff";
+    case "zip":
+      return "application/zip";
+    case "avi":
+      return "video/x-msvideo";
+    default:
+      return "application/octet-stream";
+  }
+}
+function mimeFromFileClick() {
+  const input = document.querySelector("#mimeInput");
+  const output = document.querySelector("#mimeOutput");
+  // validation here
+  if (!input || !output) {
+    console.error("Missing Input");
+    return;
+  }
+
+  //taking input
+  const filename = input.value.trim();
+
+  // input validation handle empty
+  if (!filename) {
+    output.textContent = "Enter Valid File Name";
+    output.style.color = "red";
+    return;
+  }
+
+  try {
+    const mime = mimeFromFilename(filename);
+    output.textContent = `MIME Type: ${mime}`;
+    output.style.color = "green";
+  } catch (err) {
+    output.textContent = `Error: ${err.message}`;
+    output.style.color = "red";
+  }
+}
 
 // /*******************************************************************************
 //  * Problem 8, Part 1: generate license text and link from license code.
