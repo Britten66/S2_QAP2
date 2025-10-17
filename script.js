@@ -149,38 +149,51 @@ function parseDateClick() {
   }
 }
 
+// ==============================================================================================
+// ================ Problem 4: convert Date to date string with specified format ===
+//  *============================================================================================
+
 // /*******************************************************************************
-//  * Problem 4: convert Date to date string with specified format.
-//  *
-//  * As above, a date string is expected to be formatted as follows:
-//  *
-//  * YYYY-MM-DD
-//  *
-//  * Meaning, Year (4 digits), Month (2 digits), Day (2 digits).
-//  *
 //  * Write a function, toDateString() that accepts a Date object, and returns a
 //  * date string formatted according to the specification above. Make sure your
 //  * day and month values are padded with a leading '0' if necessary (e.g., 03 vs. 3).
-//  *
-//  * In your solution, you are encouraged to use the following Date methods:
-//  *
-//  * - setFullYear()
-//  * - setMonth()
-//  * - setDate()
-//  *
-//  * NOTE: it should be possible to use parseDateString() from the previous question
-//  * and toDateString() to reverse each other. For example:
-//  *
-//  * toDateString(parseDateString('2021-01-29)) should return '2021-01-29'
-//  *
-//  * If an invalid Date is passed, throw an Error object with an appropriate error message.
-//  * HINT: use try/catch, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch
-//  *
-//  ******************************************************************************/
 
-// function toDateString(value) {
-//   // Replace this comment with your code...
-// }
+function formatDateString(dateObj) {
+  if (!(dateObj instanceof Date) || Number.isNaN(dateObj.getTime())) {
+    throw new Error("Invalid Date Style");
+  }
+
+  //taking away year and month/day here
+  const year = dateObj.getFullYear();
+
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+// this is causing errors that was deemed to be scope issues
+//try here
+
+//here wo;; get tje selected date from data and will convert it using
+// toDateString()
+function convertSelection() {
+  const picker = document.querySelector("#datePicker");
+  const output = document.querySelector("#dateStringOutput");
+  try {
+    const selectedDate = new Date(picker.value);
+
+    // The next line was done the sae as above .. causing an error
+    const formatted = formatDateString(selectedDate);
+
+    output.textContent = `Converted Date: ${formatted}`;
+    output.style.color = "green";
+    //catch here
+  } catch (err) {
+    output.textContent = `err: ${err.message}`;
+    output.style.color = "red";
+  }
+}
 
 // /*******************************************************************************
 //  * Problem 5: parse a geographic coordinate
