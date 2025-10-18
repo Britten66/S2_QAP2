@@ -640,7 +640,7 @@ function boolClick() {
 }
 
 // ==============================================================================================
-// ================  9 Part 2: checking for all True or all False values in a normalized list====
+// ================  9 Part 2: checking for all Every Anny None values in a normalized list======
 //===============================================================================================
 
 //  * Using your pureBool() function above, create three new functions to check
@@ -654,43 +654,81 @@ function boolClick() {
 //  * throws on invalid data.
 //  ******************************************************************************/
 
+// helper function here
 
-//every | any | none
- function every(...values) {
-for(const val of vlaues){
-  try{
-    if(!pureBool(val)) return false;
-  } catch {
-    return false; // value wil treat this as false
+function getInputval() {
+  const inputBox = document.getquerySeclector("#boolListInput").value;
+  return (
+    inputBox
+      .split()
+      // found a way to use .map to help get output correctly
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+  );
+}
+
+//every here
+
+function every(...values) {
+  for (const val of values) {
+    try {
+      if (!pureBool(val)) return false;
+    } catch {
+      return false; // value wil treat this as false
+    }
+  }
+  return true; // all will be true
+}
+
+// this validates the any argument
+
+function any(...values) {
+  for (const val of values) {
+    try {
+      if (!pureBool(val)) return false;
+    } catch {
+      return false;
+    }
+  }
+
+  // if none here =======
+
+  function none(...values) {
+    for (const val of values) {
+      try {
+        if (!pureBool(val)) return false;
+      } catch {
+        return true;
+      }
+
+      // handler will be here ==========
+
+      function handleEvery() {
+        const values = getInputval();
+        const result = every(...values);
+        const out = document.querySelector("#everyOutput");
+        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
+        out.style.color = result ? "green" : "red";
+      }
+
+      function handleAny() {
+        const values = getInputval();
+        const result = every(...values);
+        const out = document.querySelector("#anyOutput");
+        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
+        out.style.color = result ? "green" : "red";
+      }
+
+      function handleNone() {
+        const values = getInputval();
+        const result = every(...values);
+        const out = document.querySelector("#noOutput");
+        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
+        out.style.color = result ? "green" : "red";
+      }
+    }
   }
 }
-return true;
- }
-
- // this validated first argument 
- function any(...value){
-  for(const van of values){
-    try{}
-  }
- }
-
-// function any() {
-//   // Replace this comment with your code...
-// }
-
-// function none() {
-//   // Replace this comment with your code...
-// }
-
-
-
-
-
-
-
-
-
-
 
 // /*******************************************************************************
 //  * Problem 10 - build a URL
@@ -746,4 +784,4 @@ return true;
 // function buildUrl(query, order, count, license) {
 //   // Replace this comment with your code...
 //   //returns the properly formatted iNaturlist URL
-// }
+//

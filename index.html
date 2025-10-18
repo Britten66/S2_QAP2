@@ -139,9 +139,29 @@
 
 
    <header>
-        <h1>Converting A Value To Boolean </h1>
+        <h1> Checking If All True/False</h1>
       </header>
     </main>
+
+    <label for="boolListInput" >Enter Seperated Inputs</label>
+    <input 
+    type="text"
+    id="boolListInput"
+    placeholder="Y, yes, 1  or  no, 0, false  or  Y, invalid, 1"
+    />
+    <div style="margin-top: 8px;">
+      <button type="button" onclick="handleEvery()">Check: Every()</button>
+      <button type="button" onclick="handleAny()">Check: Any()</button>
+      <button type="button" onclick="handleNone()">Check: None()</button>
+    </div>
+
+    <p id="everyOutput"></p>
+    <p id="anyOutput"></p>
+    <p id="noOutput"></p>
+  </section>
+
+
+
 
     <footer>&copy Chris Britten 2025 SD 15</footer>
     <script src="script.js"></script>
