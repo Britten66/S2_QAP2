@@ -656,17 +656,21 @@ function boolClick() {
 
 // helper function here
 
+// prettier makes these  functions look off but they are ordered correctly
+//as per auto format it may vary
+
 function getInputval() {
-  const inputBox = document.getquerySeclector("#boolListInput").value;
+  const inputBox = document.querySelector("#boolListInput").value;
   return (
     inputBox
-      .split()
+
+      .split(/[\s,]+/) // should split commas and or spaces to sperate vals
       // found a way to use .map to help get output correctly
       .map((item) => item.trim())
       .filter((item) => item.length > 0)
   );
 }
-
+// validated up to here
 //every here
 
 function every(...values) {
@@ -685,64 +689,54 @@ function every(...values) {
 function any(...values) {
   for (const val of values) {
     try {
-      if (!pureBool(val)) return false;
-    } catch {
-      return false;
-    }
+      if (!pureBool(val)) return true;
+    } catch {}
   }
-
-  // if none here =======
-
-  function none(...values) {
-    for (const val of values) {
-      try {
-        if (!pureBool(val)) return false;
-      } catch {
-        return true;
-      }
-
-      // handler will be here ==========
-
-      function handleEvery() {
-        const values = getInputval();
-        const result = every(...values);
-        const out = document.querySelector("#everyOutput");
-        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
-        out.style.color = result ? "green" : "red";
-      }
-
-      function handleAny() {
-        const values = getInputval();
-        const result = every(...values);
-        const out = document.querySelector("#anyOutput");
-        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
-        out.style.color = result ? "green" : "red";
-      }
-
-      function handleNone() {
-        const values = getInputval();
-        const result = every(...values);
-        const out = document.querySelector("#noOutput");
-        out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
-        out.style.color = result ? "green" : "red";
-      }
-    }
-  }
+  return false;
 }
+// if none here =======
+
+function none(...values) {
+  for (const val of values) {
+    try {
+      if (pureBool(val)) return false;
+    } catch {}
+  }
+  return true;
+}
+// handler will be here ==========
+
+function handleEvery() {
+  const values = getInputval();
+  const result = every(...values);
+  const out = document.querySelector("#everyOutput");
+  out.textContent = `every(${values.join(", ")}) ➜ ${result}`;
+  out.style.color = result ? "green" : "red";
+}
+
+function handleAny() {
+  const values = getInputval();
+  const result = any(...values);
+  const out = document.querySelector("#anyOutput");
+  out.textContent = `any(${values.join(", ")}) ➜ ${result}`;
+  out.style.color = result ? "green" : "red";
+}
+
+function handleNone() {
+  const values = getInputval();
+  const result = none(...values);
+  const out = document.querySelector("#noOutput");
+  out.textContent = `none(${values.join(", ")}) ➜ ${result}`;
+  out.style.color = result ? "green" : "red";
+}
+// ==============================================================================================
+// ==================================  Problem 10 - build a URL==================================
+//===============================================================================================
 
 // /*******************************************************************************
 //  * Problem 10 - build a URL
 //  *
 //  * Querying the iNaturalist Web API (https://api.inaturalist.org/v2/observations)
-//  * for data involves formatting a URL in a particular way.  As we know might know, a URL can contain optional name=value pairs. For reference: read query strings on web :)
-//  *
-//  * For example:
-//  *
-//  *   https://www.store.com/search?q=dog includes q=dog
-//  *
-//  *   https://www.store.com?_encoding=UTF8&node=18521080011 includes
-//  *   both _encoding=UTF8 and also node=18521080011, separated by &
-//  *
 //  * We will write a buildUrl() function to build a URL for the iNaturalist API
 //  * based on arguments passed by the caller.
 //  *
@@ -757,31 +751,95 @@ function any(...values) {
 //  * Write an implementation of buildUrl() that accepts arguments for all of the above
 //  * parameters, validates them (e.g., count must be between 1 and 50, etc), and returns
 //  * a properly formatted URL.
-//  *
-//  * For example:
-//  *
-//  * buildUrl('Monarch Butterfly', 'ascending', 25, 'cc-by') would return the following URL:
-//  *
-//  * https://api.inaturalist.org/v2/observations?query='Monarch%20Butterfly'&count=25&order=ascending&license=cc-by
-//  *
-//  * NOTE: if any of the values passed to buildUrl() are invalid, an Error should be thrown.
-//  *
-//  * NOTE: make sure you properly encode the query value, since URLs can't contain
-//  * spaces or other special characters. HINT: use the encodeURIComponent() function
-//  * to do this, see:
-//  *
-//  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
-//  *
 //  * The following might be the parameters
 //  *
 //  *  "query" the query to use. Must be properly URI encoded
 //  * "order" the sort order to use, must be one of `ascending` or `descending`
 //  * "count" the number of results per page, must be 1-50
 //  * "license" the license to use, must be one of none, any, cc-by, cc-by-nc, cc-by-sa, cc-by-nd, cc-by-nc-sa, cc-by-nc-nd
-//  *
-//  ********************************************************** ********************/
+// ==============================================================================================
+// ==================================  Problem 10 START =======================================
+//===============================================================================================
 
-// function buildUrl(query, order, count, license) {
-//   // Replace this comment with your code...
-//   //returns the properly formatted iNaturlist URL
-//
+function extractNumbers() {
+  const s = document.querySelector("#origInput").value || "";
+  //regex here
+  const matches = s.match(/[+-]?\d+(?:\.\d+)?/g);
+  const nums = matches ? matches.map(Number) : [];
+  const out = document.querySelector("#numsOutput");
+  out.textContent = `nums = [${nums.join(", ")}]`;
+  out.style.color = nums.length ? "green" : "red";
+}
+
+// URL PART HERE
+
+function buildUrl(query, order, count, license) {
+  //validation here
+  if (typeof query !== "string" || query.trim().length === 0) {
+    throw new Error("Query Cannot Be Empty!!  ");
+  }
+
+  // order of integer validation here
+
+  if (order !== "ascending" && order !== "descending") {
+    throw new Error("Order must be 'ascending' or 'descending'.");
+  }
+
+  // count here
+
+  const n = Number(count);
+
+  if (!Number.isInteger(n) || n < 1 || n > 50) {
+    throw new Error("Count Must Be 1 - 50 ");
+  }
+
+  // validation for license
+
+  const allowed = new Set([
+    "none",
+    "any",
+    "cc-by",
+    "cc-by-nc",
+    "cc-by-sa",
+    "cc-by-nd",
+    "cc-by-nc-sa",
+    "cc-by-nc-nd",
+  ]);
+
+  if (!allowed.has(license)) {
+    throw new Error("Invalid Value");
+  }
+
+  // trying to build a url
+
+  const base = "https://api.inaturalist.org/v2/observations";
+
+  const q = encodeURIComponent(query.trim());
+
+  const url = `${base}?query='${q}'&count=${n}&order=${order}&license=${license}`;
+
+  return url;
+}
+
+// handler here
+
+function buildAndDisplay() {
+  const query = document.querySelector("#searchQuery").value;
+  const order = document.querySelector("#orderSelect").value;
+  const count = document.querySelector("#countInput").value;
+  const license = document.querySelector("#licenseSelect").value;
+
+  const out = document.querySelector("#initUrlOutput");
+  try {
+    const url = buildUrl(query, order, count, license);
+    out.textContent = url;
+    out.style.color = "green";
+  } catch (err) {
+    out.textContent = `Err: ${err.message}`;
+    out.style.color = "red";
+  }
+}
+
+//returns the properly formatted iNaturlist URL
+
+// coded by Christopher Britten

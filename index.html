@@ -141,13 +141,13 @@
    <header>
         <h1> Checking If All True/False</h1>
       </header>
-    </main>
+  
 
     <label for="boolListInput" >Enter Seperated Inputs</label>
     <input 
     type="text"
     id="boolListInput"
-    placeholder="Y, yes, 1  or  no, 0, false  or  Y, invalid, 1"
+    placeholder="Yes/No // 1 // 10 // 
     />
     <div style="margin-top: 8px;">
       <button type="button" onclick="handleEvery()">Check: Every()</button>
@@ -161,9 +161,63 @@
   </section>
 
 
+  <header>
+        <h1> Final Task -- Extract Numbers and Build URL </h1>
+      </header>
+  
+<section id="task10">
+  <label for="origInput"> Enter String w/ Numbers </label>"
+  <input type="text" id="origInput" placeholder="temp -12, 10 0.75" />
+  <div style="margin-top: 8px;">
+    <button type="button" onclick="extractNumbers()">Extract Numbers</button>
+  </div>
+  <p id="numsOutput"></p>
+</hr>
+<form id="initForm" onsubmit="event.preventDefault(); buildAndDisplay();">
+  <label for="searchQuery">Search Query</label>
+  <input type="text" id="searchQuery" placeholder="ex. Northern Butterfly"/>
+
+  <label for="orderSelect" style="display: block; margin-top:8px;">Sort Order</label>
+  <select id="orderSelect">
+  <option value="ascending">ascending</option>
+  <option value="descending">descending</option>
+  
+  </select>
+
+  <label for="countInput" style="display: block; margin-top: 8px;">Result Count (1-50)</label>
+  <input type="number" id="countInput" min = "1" max = "50" value="25" />
+
+  <label for="licenseSelect" style="display: block; margin-top: 8px;">License</label>
+  <select id="licenseSelect">
+    <option value="none">none</option>
+    <option value="any">any</option>
+    <option value="cc-by">cc-by</option>
+    <option value="cc-by-nc">cc-by-nc</option>
+    <option value="cc-by-sa">cc-by-sa</option>
+    <option value="cc-by-nd">cc-by-nd</option>
+    <option value="cc-by-nc-sa">cc-by-nc-sa</option>
+    <option value="cc-by-nc-nd">cc-by-nc-nd</option>
+  
+  </select>
+
+  <div style="margin-top: 10px;">
+    <button type="submit">Build URL</button>
+  </div>
+</form>
+  <p id="initUrlOutput"></p>
+
+
+
+</section>
+
+
+
+
+
 
 
     <footer>&copy Chris Britten 2025 SD 15</footer>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+      </main>
   </body>
 </html>
