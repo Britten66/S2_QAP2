@@ -840,6 +840,8 @@ function buildAndDisplay() {
   }
 }
 
-//returns the properly formatted iNaturlist URL
+//returns the properly formatted URL as per task requirments
+
+// this was really tricky
 
 // coded by Christopher Britten
