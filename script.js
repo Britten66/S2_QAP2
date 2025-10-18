@@ -491,59 +491,72 @@ function mimeFromFileClick() {
   }
 }
 
-// /*******************************************************************************
-//  * Problem 8, Part 1: generate license text and link from license code.
-//  *
-//  * Images, videos, and other resources on the web are governed by copyright.
-//  * Everything you find on the web is copyright to its creator automatically, and
-//  * you cannot reuse it unless you are granted a license to do so.
-//  *
-//  * Different licenses exist to allow creators to share their work. For example,
-//  * the Creative Commons licenses are a popular way to allow people to reuse
-//  * copyright material, see https://creativecommons.org/licenses/.
-//  *
-//  * Below is a list of license codes, and the associated license text explaining the code:
-//  *
-//  * CC-BY: Creative Commons Attribution License
-//  * CC-BY-NC: Creative Commons Attribution-NonCommercial License
-//  * CC-BY-SA: Creative Commons Attribution-ShareAlike License
-//  * CC-BY-ND: Creative Commons Attribution-NoDerivs License
-//  * CC-BY-NC-SA: Creative Commons Attribution-NonCommercial-ShareAlike License
-//  * CC-BY-NC-ND: Creative Commons Attribution-NonCommercial-NoDerivs License
-//  *
-//  * NOTE: any other licenseCode should use the URL https://choosealicense.com/no-permission/
-//  * and the explanation text, "All Rights Reserved"
-//  *
-//  * Write a function, generateLicenseLink(), which takes a license code, and returns
-//  * an HTML link to the appropriate license URL, and including the explanation text.
-//  *
-//  * For example:
-//  *
-//  * generateLicenseLink('CC-BY-NC') should return the following HTML string:
-//  *
-//  * '<a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial License</a>'
-//  *
-//  * The URL is generated based on the license code:
-//  *
-//  * - remove the `CC-` prefix
-//  * - convert to lower case
-//  * - place formatted license code within URL https://creativecommons.org/licenses/[...here]/4.0/
-//  *
+// ==============================================================================================
+// ================  Problem 8, Part 1: generate license text and link from license code.========
+//===============================================================================================
 //  * Your generateLicenseLink() function should also accept an optional second argument,
 //  * `targetBlank`.  If `targetBlank` is true, add ` target="_blank"` to your link
 //  * so that the URL opens in a blank tab/window.
-//  *
-//  * You can read more about HTML links at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
-//  *
 //  ******************************************************************************/
 
-// function generateLicenseLink(licenseCode, targetBlank) {
-//   // Replace this comment with your code...
-// }
+function generateLicenseLink(licenseCode, targetBlank) {
+  if (typeof licenseCode !== "string" || !licenseCode.trim()) {
+    throw new Error("Cannot be Empty !! ");
+  }
 
-// /*******************************************************************************
-//  * Problem 9 Part 1: convert a value to a Boolean (true or false)
-//  *
+  const code = licenseCode.trim().toUpperCase();
+
+  const licenseMap = {
+    "CC-BY": "Creative Commons Attribution License",
+    "CC-BY-NC": "Creative Commons Attribution Noncommuiciral License",
+    "CC-BY-SA": "Creative Commons Atrrribution: Sharelike License",
+    "CC-BY-ND": "Creative Commons Attribution-NoDericv License",
+    "CC-BY-NC-SA":
+      "Creative Commons Attribution-NonCommercial -Noderics ALicense",
+    "CC-BY-NC-ND":
+      "Creative Commons Attributions-noncommercial-noDerives License",
+  };
+
+  let url = "https://choosealicense.com/no-permission/";
+  let text = "All Rights Reserved";
+
+  if (licenseMap[code]) {
+    const lower = code.replace("CC-", "").toLowerCase();
+    url = `https://creativecommons.org/licenses/${lower}/4.0/`;
+    text = licenseMap[code];
+  }
+
+  const targetAttr = targetBlank ? ` target="_blank"` : "";
+  return `<a href="${url}"${targetAttr}>${text}</a>`;
+}
+// click handler here
+
+function generateLicenseLinkClick() {
+  const input = document.querySelector("#licenseInput");
+  const checkbox = document.querySelector("#targetBlankCheckbox");
+  const output = document.querySelector("#licenseOutput");
+
+  if (!input || !output) {
+    console.error("Requires Element In DOM");
+    return;
+  }
+
+  const code = input.value.trim();
+  const openNewTab = checkbox?.checked || false;
+
+  try {
+    const linkHTML = generateLicenseLink(code, openNewTab);
+    output.innerHTML = `License Link: ${linkHTML}`;
+    output.style.color = "green";
+  } catch (err) {
+    output.textContent = `Error: ${err.message}`;
+    output.style.color = "red";
+  }
+}
+
+// ==============================================================================================
+// ================  9 Part 1: convert a value to a Boolean (true or false)========
+//===============================================================================================
 //  * A dataset contains fields that indicate a value is true or false.  However,
 //  * users have entered data in various formats and languages (English and French)
 //  * over the years, and the data is a mess. For example, the dataset contains all
@@ -561,15 +574,75 @@ function mimeFromFileClick() {
 //  * 4. If the value is none of the "true" or "false" values, throw an error with the error
 //  * message, 'invalid value'.
 //  *
-//  ******************************************************************************/
 
-// function pureBool(value) {
-//   // Replace this comment with your code...
-// }
+function pureBool(value) {
+  if (typeof value === "boolean") return value;
 
-// /*******************************************************************************
-//  * Problem 9 Part 2: checking for all True or all False values in a normalized list
-//  *
+  //string handler
+  if (typeof value === "string") {
+    const cleaned = value.trim().toLowerCase();
+
+    // style text handle here
+
+    const trueValues = ["yes", "y", "oui", "o", "t", "true", "vrai", "v"];
+    const falseValues = ["no", "n", "non", "f", "false", "faux"];
+
+    if (trueValues.includes(cleaned)) return true;
+    if (falseValues.includes(cleaned)) return false;
+
+    if (!isNaN(cleaned)) {
+      const num = parseFloat(cleaned);
+      if (num > 0) return true;
+      if (num <= 0) return false;
+    }
+
+    throw new Error("Incorrect Value");
+  }
+  // number value
+  if (typeof value === "number") {
+    if (value > 0) return true;
+    if (value <= 0) return false;
+  }
+
+  //fall back here
+
+  throw new Error("Incorrect Value");
+}
+function boolClick() {
+  const input = document.querySelector("#boolInput");
+  const output = document.querySelector("#boolOutput");
+
+  if (!input || !output) {
+    console.error("No input output");
+    return;
+  }
+
+  try {
+    const rawValue = input.value.trim();
+    let parsedvalue;
+    if (rawValue === "") {
+      throw new Error("input Cannot Be Empty");
+    } else if (!Number.isNaN(Number(rawValue))) {
+      parsedvalue = Number(rawValue);
+    } else {
+      parsedvalue = rawValue;
+    }
+    const result = pureBool(parsedvalue);
+
+    //success Output
+
+    output.textContent = `Converted Result: ${result}`;
+    output.style.color = "green";
+  } catch (err) {
+    output.textContent = `Error: ${err.message}`;
+    output.style.color = "red";
+  }
+}
+
+// ==============================================================================================
+// ================  9 Part 2: checking for all True or all False values in a normalized list====
+//===============================================================================================
+
 //  * Using your pureBool() function above, create three new functions to check
 //  * if a list of arguments are all "true", partially "true", or all "false" values:
 //  *
@@ -581,9 +654,25 @@ function mimeFromFileClick() {
 //  * throws on invalid data.
 //  ******************************************************************************/
 
-// function every() {
-//   // Replace this comment with your code...
-// }
+
+//every | any | none
+ function every(...values) {
+for(const val of vlaues){
+  try{
+    if(!pureBool(val)) return false;
+  } catch {
+    return false; // value wil treat this as false
+  }
+}
+return true;
+ }
+
+ // this validated first argument 
+ function any(...value){
+  for(const van of values){
+    try{}
+  }
+ }
 
 // function any() {
 //   // Replace this comment with your code...
@@ -592,6 +681,16 @@ function mimeFromFileClick() {
 // function none() {
 //   // Replace this comment with your code...
 // }
+
+
+
+
+
+
+
+
+
+
 
 // /*******************************************************************************
 //  * Problem 10 - build a URL

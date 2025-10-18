@@ -23,6 +23,13 @@ video {
   overflow: hidden;
   box-shadow: 0 5px 12px black;
   margin-top: 10px;
+
+
+  }
+  
+
+label {
+  color:black
 }
 footer {
   color: black;
